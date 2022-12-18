@@ -20,6 +20,27 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
+Route.group(() => {
+  Route.get('/', async () => {
+    return {
+      msg: 'Bad request ⛔️',
+    }
+  })
+
+  Route.group(() => {
+    Route.get('/', 'UsersController.show')
+    Route.post('/', 'UsersController.create')
+  }).prefix('subscribers')
+
+  Route.group(() => {
+    Route.get('/', 'SitesController.show')
+    Route.post('/', 'SitesController.create')
+    Route.post('/sign', 'SitesController.subscribe')
+  }).prefix('landings')
+}).prefix('foundation')
+
+Route.get('*', () => {
+  return {
+    msg: 'Invalid route, try with "foundation" prefix ❌',
+  }
 })
